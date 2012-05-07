@@ -50,7 +50,7 @@
 		<mapping package="is.merkor.hibernate.data"/>
 		<mapping class="is.merkor.statistics.hibernate.data.LexicalItem"/>
 		<mapping class="is.merkor.statistics.hibernate.data.LexicalRelationType"/>
-		<mapping class="is.merkor.statistics.hibernate.data.LexicalRelationComplete"/>
+		<mapping class="is.merkor.statistics.hibernate.data.LexicalRelationCount"/>
 	</session-factory>
 </hibernate-configuration>
 
