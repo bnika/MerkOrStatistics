@@ -10,6 +10,7 @@ package is.merkor.statistics.cli;
  *******************************************************************************/
 
 import is.merkor.statistics.relations.LMIProcessing;
+import is.merkor.statistics.relations.LMI_to_DB;
 import is.merkor.statistics.relations.RelationMerger;
 import is.merkor.statistics.relations.RelationTensor;
 
@@ -74,6 +75,16 @@ public class Main {
 			String lmifile = tensorfile.substring(0, tensorfile.indexOf('.')) + "_lmi.ds";
 			LMIProcessing lmi = new LMIProcessing();
 			lmi.computeLMIForFile(tensorfile, lmifile);
+		}
+		if (cmdLine.hasOption("lmi2db")) {
+			String tablename = "lexrelation_lmi";
+			if (cmdLine.hasOption("tablename"))
+				tablename = cmdLine.getOptionValue("tablename");
+			
+			String lmifile = cmdLine.getOptionValue("lmi2db");
+			String dbfile = lmifile.substring(0, lmifile.indexOf('.')) + ".sql";
+			LMI_to_DB lmi = new LMI_to_DB();
+			lmi.lmiToDB(lmifile, dbfile, tablename);
 		}
 	}
 	
