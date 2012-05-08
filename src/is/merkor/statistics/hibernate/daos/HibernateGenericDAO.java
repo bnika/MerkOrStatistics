@@ -63,9 +63,16 @@ public abstract class HibernateGenericDAO<T, ID extends Serializable> implements
 	}
 
 	@Override
-	public int getRowCount() {
-		// TODO Auto-generated method stub
-		return 0;
+	public long getRowCount() {
+		SessionFactory factory = HibernateUtil.getSessionFactory();
+		Session session = factory.openSession();
+		String className = persistentClass.getName();
+		try {
+			long rowCount = (Long)session.createQuery("select count(*) from  " + className).iterate().next();
+			return rowCount;
+		} finally {
+			session.close();
+		}
 	}
 
 }

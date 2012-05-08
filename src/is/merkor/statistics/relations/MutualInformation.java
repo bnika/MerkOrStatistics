@@ -9,7 +9,7 @@ public class MutualInformation {
 	/**
 	 * Local mutual information is computed as follows:
 	 * 
-	 * log(observed_joint_frequency/expected_frequency)
+	 * log(observed_joint_frequency/expected_joint_frequency)
 	 * 
 	 * @param miObj
 	 * @return
@@ -28,7 +28,7 @@ public class MutualInformation {
 	/**
 	 * Local mutual information is computed as follows:
 	 * 
-	 * observed_joint_frequency * log(observed_joint_frequency/expected_frequency)
+	 * observed_joint_frequency * log(observed_joint_frequency/expected_joint_frequency)
 	 * 
 	 * @param miObj
 	 * @return
@@ -49,7 +49,7 @@ public class MutualInformation {
 	 * Expected frequency: (total_occurrences_elem1 * total_occurrences_elem2) / N
 	 */
 	private static double getExpectedFrequency (PairType miObj) {
-		Double frequencies = (miObj.jointFrequency() + miObj.freq_1()) * (miObj.jointFrequency() + miObj.freq_2());
+		Double frequencies = ((double)miObj.freq_1() * miObj.freq_2());
 		return frequencies / miObj.getN();
 	}
 }

@@ -42,5 +42,5 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * 
 	 * @return the number of rows
 	 */
-	public int getRowCount ();
+	public long getRowCount ();
 }

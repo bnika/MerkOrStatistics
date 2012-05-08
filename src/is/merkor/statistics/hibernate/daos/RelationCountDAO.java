@@ -7,9 +7,11 @@ package is.merkor.statistics.hibernate.daos;
  * 
  *******************************************************************************/
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -89,6 +91,19 @@ public class RelationCountDAO extends HibernateGenericDAO<LexicalRelationCount, 
 			return findByQueryWithLemma(lemma1, lemma2, "relation.by.bothLemma");
 		}
 		
+		public int getCountSum () {
+			SessionFactory factory = HibernateUtil.getSessionFactory();
+			Session session = factory.openSession();
+			try {
+				//Query query = session.getNamedQuery("relation.sumCount");
+				SQLQuery query = session.createSQLQuery("select sum(count) from lexical_relation_new");
+				BigDecimal count = (BigDecimal)query.uniqueResult();
+				int result = count.intValue();
+				return result;
+			} finally {
+				session.close();
+			}
+		}
 		public List<LexicalRelationCount> findAllByLimit(int start, int limit) {
 			SessionFactory factory = HibernateUtil.getSessionFactory();
 			Session session = factory.openSession();

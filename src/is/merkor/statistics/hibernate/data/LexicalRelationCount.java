@@ -36,7 +36,9 @@ import javax.persistence.Table;
 	@NamedQuery (name = "relation.by.relationid.and.id",
 			query = "from LexicalRelationCount as relation where relation.type.id = ? and (relation.fromItem = ? or relation.toItem = ?)"),
 	@NamedQuery (name = "relation.findAllByLimit",
-			query = "from LexicalRelationCount")
+			query = "from LexicalRelationCount as relation order by relation.id"),
+	//@NamedQuery (name = "relation.sumCount",
+	//	query = "select sum(count) from lexical_relation_new")
 })
 @Entity
 @Table (name = "LEXICAL_RELATION_NEW")
