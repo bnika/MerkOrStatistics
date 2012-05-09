@@ -9,6 +9,7 @@ package is.merkor.statistics.cli;
  * 
  *******************************************************************************/
 
+import is.merkor.statistics.cooccurrence.CooccurrenceProcessing;
 import is.merkor.statistics.relations.LMIProcessing;
 import is.merkor.statistics.relations.LMI_to_DB;
 import is.merkor.statistics.relations.RelationMerger;
@@ -85,6 +86,12 @@ public class Main {
 			String dbfile = lmifile.substring(0, lmifile.indexOf('.')) + ".sql";
 			LMI_to_DB lmi = new LMI_to_DB();
 			lmi.lmiToDB(lmifile, dbfile, tablename);
+		}
+		
+		if (cmdLine.hasOption("wordwindow")) {
+			String in = cmdLine.getOptionValue("wordwindow");
+			CooccurrenceProcessing cooccProc = new CooccurrenceProcessing();
+			cooccProc.computeCooccurrences(in);
 		}
 	}
 	

@@ -32,6 +32,7 @@ public class MerkorCommandLineOptions {
 	private static Option lmi;
 	private static Option lmi2db;
 	private static Option tablename;
+	private static Option wordwindow;
 	
 	public static Options options = new Options();
 	
@@ -49,6 +50,7 @@ public class MerkorCommandLineOptions {
 		options.addOption(lmi);
 		options.addOption(lmi2db);
 		options.addOption(tablename);
+		options.addOption(wordwindow);
 	}
 
 	private static void createBooleanOptions() {
@@ -82,6 +84,10 @@ public class MerkorCommandLineOptions {
 		.hasArg()
 		.withDescription("db tablename")
 		.create("tablename");
+		wordwindow  = OptionBuilder.withArgName("input file or directory")
+		.hasArg()
+		.withDescription("file or directory to compute word window cooccurrence statistics")
+		.create("wordwindow");
 	}
 
 }

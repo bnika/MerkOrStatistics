@@ -44,9 +44,22 @@ Having a merged file of the final format from step 1, following command computes
 
     java -jar merkor-statistics.jar -lmi2db relationTensorSorted_merged_lmi.ds -tablename db-tablename  
 
-## Cooccurrence statistics
+### Cooccurrence statistics
 
-For the computation of word co-occurrence statistics, one has first to define the words that are to be examined. There are on the one hand the words that one wants information about - in MerkOr for example these were all nouns that ... - and on the other hand so called content words. The basic of the cooccurrence statistics is to collect numbers of co-occurrences of the words in the first list with words from the content word list. These lists can of course be identical. See e.g. (ref): 
+#### Cooccurrence matrix
+
+For the computation of word co-occurrence statistics, one has first to define the words that are to be examined. There are on the one hand the words that one wants information about - in MerkOr for example these were all nouns that ... - and on the other hand so called content words. The basic of the cooccurrence statistics is to collect numbers of co-occurrences of the words in the first list with words from the content word list. These lists can of course be identical. See e.g. (ref):  
+
+Create a directory <code>cooccurData</code> with the files <code>contentWordList.csv</code> and <code>objectWordList.csv</code> with the word-frequency tables. To compute a cooccurrence matrix for an input file or directory, run:
+
+    java -Xmx2048M -jar merkor-statistics.jar -wordwindow your-input-file
+
+This program creates a directory <code>sparseMatrix</code> with a Yale representation of the sparse matrix resulting from the cooccurrence computation: <code>columns.txt, indices.txt, values.txt</code>. These files are needed for the further computation of word similarities.
+
+#### Semantic Similarity based on cooccurrences
+
+
+  
 
 
 

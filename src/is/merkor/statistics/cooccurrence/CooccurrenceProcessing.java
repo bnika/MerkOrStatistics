@@ -44,6 +44,14 @@ public class CooccurrenceProcessing {
     	statistics = new WordWindowStatistics(freqFile, objFile, contWrdInd, objWrdInd, winSize);
     }
     
+    public void computeCooccurrences (String input) {
+    	String out = "sparseMatrix/";
+    	File dir = new File(out);
+    	dir.mkdir();
+    	processDirectory(input);
+    	statistics.computeCooccurMatrix();
+    	statistics.writeSparseMatrix(out);
+    }
     public void computeCooccurrences (String input, String outputDir) {
     	File dir = new File(outputDir);
     	dir.mkdir();
@@ -89,13 +97,13 @@ public class CooccurrenceProcessing {
         }
     }
 
-    public static void main(String[] args) {
-        //input files:
-        String dataDirectory = "lemmatized.txt";
-        String outputDir = "sparseMatrix_ww3_large/";
-        CooccurrenceProcessing coocc = new CooccurrenceProcessing();
-        coocc.computeCooccurrences(dataDirectory, outputDir);
-        
-    }
+//    public static void main(String[] args) {
+//        //input files:
+//        String dataDirectory = "lemmatized.txt";
+//        String outputDir = "sparseMatrix_ww3_large/";
+//        CooccurrenceProcessing coocc = new CooccurrenceProcessing();
+//        coocc.computeCooccurrences(dataDirectory, outputDir);
+//        
+//    }
 
 }
