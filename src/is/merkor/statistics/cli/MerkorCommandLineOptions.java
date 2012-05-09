@@ -30,6 +30,8 @@ public class MerkorCommandLineOptions {
 	private static Option output;
 	private static Option merge;
 	private static Option lmi;
+	private static Option lmi2db;
+	private static Option tablename;
 	
 	public static Options options = new Options();
 	
@@ -45,6 +47,8 @@ public class MerkorCommandLineOptions {
 		options.addOption(tensor);
 		options.addOption(merge);
 		options.addOption(lmi);
+		options.addOption(lmi2db);
+		options.addOption(tablename);
 	}
 
 	private static void createBooleanOptions() {
@@ -70,6 +74,14 @@ public class MerkorCommandLineOptions {
 		.hasArg()
 		.withDescription("file to compute lmi")
 		.create("lmi");
+		lmi2db  = OptionBuilder.withArgName("create db insert statements from argument file")
+		.hasArg()
+		.withDescription("create db insert statements from argument file")
+		.create("lmi2db");
+		tablename  = OptionBuilder.withArgName("db tablename")
+		.hasArg()
+		.withDescription("db tablename")
+		.create("tablename");
 	}
 
 }

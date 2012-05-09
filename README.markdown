@@ -3,7 +3,7 @@
 A package to compute statistical information from extracted relations from text as well as co-occurrence similarity and clustering as used in the MerkOr project. MerkOr is an automatically constructed semantic database for Icelandic.
 For the relation extraction package see [MerkOrExtraction]<https://github.com/bnika/MerkOrExtraction>.
 
-## Preparation of data
+## Relation statistics - LMI of lexical relations
 
 In order to perform statistical computation like Mutual information, frequency information of the relations and their elements have to be available.
 
@@ -34,11 +34,19 @@ An example of the merge process (id\_1  id\_2  joint\_freq  f1  f2  sum):
  
     id    16690    10380    46    42450    7855   12827225  
 
-#### Step 2: Computing Local Mutual Information
+#### Step 2: Compute Local Mutual Information
 
 Having a merged file of the final format from step 1, following command computes the local mutual information for each relation and writes to a new file:
 
     java -jar merkor-statistics.jar -lmi relationTensorSorted.ds
+
+#### Step 3: LMI data to database
+
+    java -jar merkor-statistics.jar -lmi2db relationTensorSorted_merged_lmi.ds -tablename db-tablename  
+
+## Cooccurrence statistics
+
+For the computation of word co-occurrence statistics, one has first to define the words that are to be examined. There are on the one hand the words that one wants information about - in MerkOr for example these were all nouns that ... - and on the other hand so called content words. The basic of the cooccurrence statistics is to collect numbers of co-occurrences of the words in the first list with words from the content word list. These lists can of course be identical. See e.g. (ref): 
 
 
 
