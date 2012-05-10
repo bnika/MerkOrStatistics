@@ -44,7 +44,7 @@ Having a merged file of the final format from step 1, following command computes
 
     java -jar merkor-statistics.jar -lmi2db relationTensorSorted_merged_lmi.ds -tablename db-tablename  
 
-### Cooccurrence statistics
+## Cooccurrence statistics
 
 #### Cooccurrence matrix
 
@@ -57,6 +57,8 @@ Create a directory <code>cooccurData</code> with the files <code>contentWordList
 This program creates a directory <code>sparseMatrix</code> with a Yale representation of the sparse matrix resulting from the cooccurrence computation: <code>columns.txt, indices.txt, values.txt</code>. These files are needed for the further computation of word similarities.
 
 #### Semantic Similarity based on cooccurrences
+
+## Clustering
 
 
   
