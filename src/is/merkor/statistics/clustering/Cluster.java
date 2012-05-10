@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Cluster {
+public class Cluster implements Comparable<Cluster> {
 	ArrayList<DataPoint> dataPoints;
 	DataPoint centerDataPoint; //no real data, generated center point!
     String clusterName;
+    Double avgPairwiseSimilarity;
     int id;
     int lowerBound = 5;
     int upperBound = 1000;
@@ -103,18 +104,10 @@ public class Cluster {
         return newCluster;
     }
 
-    /**
-     *
-     * @return the name
-     */
     public String getClusterName() {
         return clusterName;
     }
 
-    /**
-     *
-     * @param name the name to set
-     */
     public void setName(String clusterName) {
         this.clusterName = clusterName;
     }
@@ -217,6 +210,23 @@ public class Cluster {
         }
         return center;
     }
+    
+    public void computeAvgPairwiseSimilarity () {
+    	double sumSim = 0.0;
+    	int count = 0;
+    	for (int i = 0; i < dataPoints.size() - 1; i++) {
+    		for (int j = i + 1; j < dataPoints.size(); j++) {
+    			sumSim += dataPoints.get(i).computeCosineSimilarityTo(dataPoints.get(j));
+    			count++;
+    		}
+    	}
+    	avgPairwiseSimilarity = (sumSim / count) * dataPoints.size(); // s. CBC_Phase2 for expl: |c| x avgsim(c)
+    }
+    public Double getAvgSimilarity() {
+    	if (null == avgPairwiseSimilarity)
+    		return 0.0;
+    	return avgPairwiseSimilarity;
+    }
     public int getId() {
         return id;
     }
@@ -234,5 +244,21 @@ public class Cluster {
         //return name;
         return getRealDataCenter().name;
     }
+    /**
+     * Compares two clusters on the base of their avgPairwiseSimilarity.
+     * A larger value should be sorted above a smaller value. 
+     * If both values are null, 0 is returned.
+     */
+	@Override
+	public int compareTo(Cluster other) {
+		if (null == avgPairwiseSimilarity && null == other.getAvgSimilarity())
+			return 0;
+		if (null == avgPairwiseSimilarity)
+			return 1;
+		if (null == other.getAvgSimilarity())
+			return -1;
+		else
+			return other.getAvgSimilarity().compareTo(avgPairwiseSimilarity);
+	}
 
 }
