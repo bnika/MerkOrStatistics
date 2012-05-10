@@ -33,6 +33,12 @@ public class MerkorCommandLineOptions {
 	private static Option lmi2db;
 	private static Option tablename;
 	private static Option wordwindow;
+	private static Option sim;
+	private static Option tosql;
+	private static Option tocsv;
+	private static Option w1;
+	private static Option w2;
+	private static Option n;
 	
 	public static Options options = new Options();
 	
@@ -51,6 +57,13 @@ public class MerkorCommandLineOptions {
 		options.addOption(lmi2db);
 		options.addOption(tablename);
 		options.addOption(wordwindow);
+		options.addOption(sim);
+		options.addOption(w1);
+		options.addOption(w2);
+		options.addOption(tosql);
+		options.addOption(tocsv);
+		options.addOption(n);
+		
 	}
 
 	private static void createBooleanOptions() {
@@ -88,6 +101,30 @@ public class MerkorCommandLineOptions {
 		.hasArg()
 		.withDescription("file or directory to compute word window cooccurrence statistics")
 		.create("wordwindow");
+		sim  = OptionBuilder.withArgName("compute similarities using the argument sparse matrix directory")
+		.hasArg()
+		.withDescription("compute similarities using the argument sparse matrix directory")
+		.create("sim");
+		tosql  = OptionBuilder.withArgName("sql output file")
+		.hasArg()
+		.withDescription("sql output file")
+		.create("tosql");
+		tocsv  = OptionBuilder.withArgName("csv output file")
+		.hasArg()
+		.withDescription("csv output file")
+		.create("tocsv");
+		w1  = OptionBuilder.withArgName("word to compute similarities for")
+		.hasArg()
+		.withDescription("word to compute similarities for")
+		.create("w1");
+		w2  = OptionBuilder.withArgName("word to compute similarities for")
+		.hasArg()
+		.withDescription("word to compute similarities for")
+		.create("w2");
+		n  = OptionBuilder.withArgName("number of similar words to compute")
+		.hasArg()
+		.withDescription("number of similar words to compute")
+		.create("n");
 	}
 
 }

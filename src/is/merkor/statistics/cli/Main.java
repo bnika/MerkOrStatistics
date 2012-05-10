@@ -9,11 +9,16 @@ package is.merkor.statistics.cli;
  * 
  *******************************************************************************/
 
+import java.util.List;
+import java.util.Map;
+
+import is.merkor.statistics.clustering.SimilarityComputation;
 import is.merkor.statistics.cooccurrence.CooccurrenceProcessing;
 import is.merkor.statistics.relations.LMIProcessing;
 import is.merkor.statistics.relations.LMI_to_DB;
 import is.merkor.statistics.relations.RelationMerger;
 import is.merkor.statistics.relations.RelationTensor;
+import is.merkor.util.FileCommunicatorReading;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -92,6 +97,62 @@ public class Main {
 			String in = cmdLine.getOptionValue("wordwindow");
 			CooccurrenceProcessing cooccProc = new CooccurrenceProcessing();
 			cooccProc.computeCooccurrences(in);
+		}
+		
+		if (cmdLine.hasOption("sim")) {
+			String sparseMatrixDir = cmdLine.getOptionValue("sim");
+			if (cmdLine.hasOption("tosql")) {
+				// process 2sql
+				String infile = cmdLine.getOptionValue("input");
+				List<String> wordlist = FileCommunicatorReading.getLinesFromFileAsStrings(infile);
+				String sqlfile = cmdLine.getOptionValue("tosql");
+				int nr = 10;
+				if (cmdLine.hasOption("n"))
+					nr = Integer.parseInt(cmdLine.getOptionValue("n"));
+				try {
+					SimilarityComputation simComp = new SimilarityComputation(sparseMatrixDir);
+					simComp.similarityListsToSQL(wordlist, sqlfile, nr);
+				} catch (Exception e) {
+					System.err.println("couldn't create datapoints for similarity computation!");
+				}
+			}
+			else if (cmdLine.hasOption("tocsv")) {
+				// process 2csv
+				String infile = cmdLine.getOptionValue("input");
+				List<String> wordlist = FileCommunicatorReading.getLinesFromFileAsStrings(infile);
+				String sqlfile = cmdLine.getOptionValue("tocsv");
+				int nr = 10;
+				if (cmdLine.hasOption("n"))
+					nr = Integer.parseInt(cmdLine.getOptionValue("n"));
+				try {
+					SimilarityComputation simComp = new SimilarityComputation(sparseMatrixDir);
+					simComp.similarityListsToCSV(wordlist, sqlfile, nr);
+				} catch (Exception e) {
+					System.err.println("couldn't create datapoints for similarity computation!");
+				}
+			}
+			else if (cmdLine.hasOption("w1") && cmdLine.hasOption("w2")) {
+				// sim of two words
+				try {
+					SimilarityComputation simComp = new SimilarityComputation(sparseMatrixDir);
+					double sim = simComp.getSimilarity(cmdLine.getOptionValue("w1"), cmdLine.getOptionValue("w2"));
+					System.out.println("similarity: " + sim);
+				} catch (Exception e) {
+					
+				}
+			}
+			else if (cmdLine.hasOption("w1") && cmdLine.hasOption("n")) {
+				// n sim words of w1
+				try {
+					SimilarityComputation simComp = new SimilarityComputation(sparseMatrixDir);
+					Map<Double, String> map = simComp.getMostSimilarWords(cmdLine.getOptionValue("w1"), Integer.parseInt(cmdLine.getOptionValue("n")));
+					for (Double d : map.keySet()) {
+						System.out.println(map.get(d) + " - " + d);
+					}
+				} catch (Exception e) {
+					
+				}
+			}
 		}
 	}
 	

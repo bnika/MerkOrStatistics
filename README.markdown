@@ -56,7 +56,29 @@ Create a directory <code>cooccurData</code> with the files <code>contentWordList
 
 This program creates a directory <code>sparseMatrix</code> with a Yale representation of the sparse matrix resulting from the cooccurrence computation: <code>columns.txt, indices.txt, values.txt</code>. These files are needed for the further computation of word similarities.
 
-#### Semantic Similarity based on cooccurrences
+#### Semantic Similarity based on cooccurrences  
+
+There are several possiblilities for similarity computation - all of them need access to the sparse matrix directory, and in that directory additionally to the sparse matrix file, a file <code>words.txt</code> should be placed, containing the list of words for which the matrix was computed for - and very important - in the same order as they were computed in the cooccurrence matrix. So use the <code>objectWordList.csv</code> which was the input for the cooccurrence matrix computation, without the frequency information.  
+
+Similarity information:
+1) Compute top n similarities for words from a wordlist - this can be the complete sparseMatrix/words.txt file, or a sublist of these (order does not matter here). If parameter -n is not set, the default value 10 is used. Write the results into an SQL-statement file with insert statements:
+
+    java -Xmx2048M -jar merkor-statistics.jar -sim sparseMatrix/ -tosql sqlfile.sql -input wordlistfile  (-n nrOfRelatedWords)
+
+2) Same as 1), but instead of an SQL file, a tab-separated csv (tsv) file is written:
+
+    java -Xmx2048M -jar merkor-statistics.jar -sim sparseMatrix/ -tocsv csvfile -input wordlistfile
+
+3) Get the top n similarities for one word (prints to standard out, with similarity values):
+
+    java -Xmx2048M -jar merkor-statistics.jar -sim sparseMatrix/ -w1 word (-n nrOfRelatedWords)
+
+4) Get the similarity value for two words from the wordlist (prints to standard out):
+
+    java -Xmx2048M -jar merkor-statistics.jar -sim sparseMatrix/ -w1 word1 -w2 word2
+
+
+    
 
 ## Clustering
 
