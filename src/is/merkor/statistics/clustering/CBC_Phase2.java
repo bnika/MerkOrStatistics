@@ -2,16 +2,11 @@ package is.merkor.statistics.clustering;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Implementation of the Clustering-by-Committee algorithm.
- * See: Pantel & Lin (2002): Discovering Word Senses from Text. Proceedings of ACM Conference KDD-02, pp. 613-619.
- * 
- * Two Phases:
- * Phase I: Find top-similar elements
+ *
  * 
  * Phase II, Pseudocode (Pantel & Lin 2002:615):
  * 
@@ -57,23 +52,22 @@ public class CBC_Phase2 {
 	private Map<String, Map<String, Double>> similarityLists;
 	// increment at every new Cluster creation, use as id
 	private int clusterCounter = 0; 
-	
+	// committee centers have to have distance below this threshold
 	private final double committeeThreshold = 0.35;
+	// elements not reaching this threshold for any committe are residues
 	private final double residuesThreshold = 0.2;
 	
-	public CBC_Phase2 (List<DataPoint> elements) {
+	public CBC_Phase2 (List<DataPoint> elements, CBC_Phase1 phase1) {
 		this.datapoints = elements;
-		this.similarityLists = initSimilarityLists();
+		this.similarityLists = phase1.getSimilarityLists();
 	}
-	
-	private Map<String, Map<String, Double>> initSimilarityLists() {
-		Map<String, Map<String, Double>> map = new HashMap<String, Map<String, Double>>();
-		// init similaritylist - from file? or db necessary?
-		return map;
+	public List<DataPoint> getDatapoints () {
+		return datapoints;
 	}
 	
 	//STEP 1 & 2
 	public List<Cluster> clusterElements (List<DataPoint> elements) {
+		System.out.println("clustering " + elements.size() + " elements ...");
 		List<Cluster> highestScoringClusters = new ArrayList<Cluster>();
 		for (DataPoint dp : elements) {
 			// the most similar words to each element are already
@@ -81,6 +75,7 @@ public class CBC_Phase2 {
 			if (similarityLists.containsKey(dp.getName())) {
 				Map<String, Double> simMap = similarityLists.get(dp.getName());
 				Cluster c = createClusterFromMap(simMap);
+				c.computeCenter();
 				c.computeAvgPairwiseSimilarity();
 				highestScoringClusters.add(c);
 			}
@@ -91,25 +86,34 @@ public class CBC_Phase2 {
 	
 	// STEP 3
 	public List<Cluster> computeCommittees (List<Cluster> clusters) {
+		System.out.println("computing committees out of " + clusters.size() + " clusters ...");
 		List<Cluster> committees = new ArrayList<Cluster>();
-		List<DataPoint> committeCenters = new ArrayList<DataPoint>();
+		List<DataPoint> committeeCenters = new ArrayList<DataPoint>();
 		for (Cluster c : clusters) {
 			DataPoint currentCenter = c.getCenter();
-			if (committeCenters.isEmpty()) {
-				committeCenters.add(currentCenter);
+			if (committeeCenters.isEmpty()) {
+				committeeCenters.add(currentCenter);
 				committees.add(c);
 			}
-			else {
-				for (DataPoint cent : committeCenters) {
-					if (cent.computeCosineSimilarityTo(currentCenter) < committeeThreshold) {
-						committeCenters.add(currentCenter);
-						committees.add(c);
-						break;
-					}
-				}
+			else if (isBelowThreshold(currentCenter, committeeCenters)) {
+				committeeCenters.add(currentCenter);
+				committees.add(c);
 			}
 		}
 		return committees;
+	}
+	/*
+	 * Returns true if the similarity of center and each point in committeeCenters
+	 * is below committeeThreshold, returns false at the moment when a higher similarity
+	 * is computed.
+	 */
+	private boolean isBelowThreshold (DataPoint center, List<DataPoint> committeeCenters) {
+		for (DataPoint cent : committeeCenters) {
+			if (cent.computeCosineSimilarityTo(center) > committeeThreshold) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	// STEP 4
@@ -118,6 +122,7 @@ public class CBC_Phase2 {
 	// STEP 5
 	// find residues
 	public List<DataPoint> collectResidues (List<Cluster> committees, List<DataPoint> elements) {
+		System.out.println("collecting residues out of " + elements.size() + " using " + committees.size() + " committees");
 		List<DataPoint> residues = new ArrayList<DataPoint>();
 		for (DataPoint elem : elements) {
 			boolean thresholdReached = false;

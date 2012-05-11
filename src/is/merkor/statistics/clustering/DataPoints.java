@@ -28,8 +28,8 @@ public class DataPoints {
 	private ArrayList<DataPoint> datapoints;
 	private int dimension; //dimension of the full vector of the DataPoint objects, i.e. with zero values
 	
-	private int maxOccurrences = 3000000; //f. merkor sim comp: maxOcc = 3000
-	private int minOccurrences = 0; //10; //f. merkor sim comp: minOcc = 10
+	private int maxOccurrences = 3000; //f. merkor sim comp: maxOcc = 3000
+	private int minOccurrences = 1000; //10; //f. merkor sim comp: minOcc = 10
 	
 	public DataPoints (String directory) throws Exception {
 		matrix = new SparseMatrix(directory + valuesFile, directory + columnsFile, directory + indicesFile, directory + wordsFile);

@@ -76,11 +76,11 @@ Similarity information:
 4) Get the similarity value for two words from the wordlist (prints to standard out):
 
     java -Xmx2048M -jar merkor-statistics.jar -sim sparseMatrix/ -w1 word1 -w2 word2
-
-
     
 
-## Clustering
+## Clustering 
+
+The clustering algorithm implemented in merkor-statistics is the so called Clustering-by-Committee algorithm (Pantel & Lin, 2002). It needs both the sparse matrix data as well as already computed similarity lists from the cooccurrence statistics step above. It uses the similarity lists to find promising cluster candidates (committees) and by thresholds decides if a) a new committee should be created (committees have to have a certain distance) and b) if an element gets assigned to a committee. For a detailed description, see the source code documentation and of course the paper by Pantel and Lin: Pantel & Lin (2002): Discovering Word Senses from Text. Proceedings of ACM Conference KDD-02, pp. 613-619.
 
 
   
