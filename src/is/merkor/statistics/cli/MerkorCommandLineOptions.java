@@ -39,6 +39,8 @@ public class MerkorCommandLineOptions {
 	private static Option w1;
 	private static Option w2;
 	private static Option n;
+	private static Option cbc;
+	private static Option simlist;
 	
 	public static Options options = new Options();
 	
@@ -63,6 +65,8 @@ public class MerkorCommandLineOptions {
 		options.addOption(tosql);
 		options.addOption(tocsv);
 		options.addOption(n);
+		options.addOption(cbc);
+		options.addOption(simlist);
 		
 	}
 
@@ -125,6 +129,14 @@ public class MerkorCommandLineOptions {
 		.hasArg()
 		.withDescription("number of similar words to compute")
 		.create("n");
+		cbc  = OptionBuilder.withArgName("matrix to cluster")
+		.hasArg()
+		.withDescription("matrix to cluster")
+		.create("cbc");
+		simlist  = OptionBuilder.withArgName("similarity lists")
+		.hasArg()
+		.withDescription("file containing similarity lists")
+		.create("simlist");
 	}
 
 }

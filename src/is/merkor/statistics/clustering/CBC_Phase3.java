@@ -32,13 +32,26 @@ import java.util.TreeMap;
  */
 public class CBC_Phase3 {
 	
+	private List<DataPoint> datapoints;
+	private List<Cluster> committees;
+	
 	private final double assignmentThreshold = 0.2;
+	private final int nrOfTopSimilar = 3;
 	
-	public CBC_Phase3 () {
-		
+	public CBC_Phase3 (List<DataPoint> elements, List<Cluster> committees) {
+		this.datapoints = elements;
+		this.committees = committees;
 	}
-	
-	public List<Cluster> getMostSimilarClusters (List<Cluster> clusters, DataPoint element, int number) {
+	public List<Cluster> assignElements () {
+		System.out.println("Phase III assigning elements ...");
+		for (DataPoint dp : datapoints) {
+			List<Cluster> mostSimilar = getMostSimilarClusters (committees, dp);
+			assignElementToTopSimilar(mostSimilar, dp);
+		}
+		
+		return committees;
+	}
+	public List<Cluster> getMostSimilarClusters (List<Cluster> clusters, DataPoint element) {
 		List<Cluster> mostSimilar = new ArrayList<Cluster>();
 		TreeMap<Double, Cluster> topClusters = new TreeMap<Double, Cluster>(); 
 		double minSim = 0.0;
@@ -46,7 +59,7 @@ public class CBC_Phase3 {
 		for (Cluster c : clusters) {
 			double sim = c.getCenter().computeCosineSimilarityTo(element);
 			if (sim > minSim) {
-				if (topClusters.size() < number) {
+				if (topClusters.size() < nrOfTopSimilar) {
 					topClusters.put(sim, c);
 					minSim = topClusters.firstKey();
 				}
@@ -60,23 +73,17 @@ public class CBC_Phase3 {
 		return mostSimilar;
 		
 	}
-	public List<Cluster> assignElementToClusters (List<Cluster> mostSimilar, DataPoint element) {
-		List<Cluster> clustersAssignedTo = new ArrayList<Cluster>();
-		
+	public void assignElementToTopSimilar (List<Cluster> mostSimilar, DataPoint element) {
+		//List<Cluster> clustersAssignedTo = new ArrayList<Cluster>();
 		for (Cluster c : mostSimilar) {
 			if (c.getCenter().computeCosineSimilarityTo(element) < assignmentThreshold)
 				break;
 			
-			c.add(element);
-			clustersAssignedTo.add(c);
-			element = removeOverlappingFeatures(c.getCenter(), element);
+			int ind = committees.indexOf(c);
+			committees.get(ind).add(element);
+			//clustersAssignedTo.add(c);
+			element.removeCommonFeaturesWith(c.getCenter());
 		}
-		return clustersAssignedTo;
-	}
-	
-	private DataPoint removeOverlappingFeatures(DataPoint refPoint, DataPoint element) {
-		
-		element.removeCommonFeaturesWith(refPoint);
-		return element;
+		//return clustersAssignedTo;
 	}
 }

@@ -1,5 +1,7 @@
 package is.merkor.statistics.clustering;
 
+import is.merkor.util.FileCommunicatorWriting;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,22 +22,24 @@ public class ClusteringByCommittee {
 	
 	private String similarityFile;
 	private String matrixDirectory;
+	private List<DataPoint> datapoints;
 	
 	public ClusteringByCommittee (String similarityFile, String matrixDir) {
 		this.similarityFile = similarityFile;
 		this.matrixDirectory = matrixDir;
 	}
 	
-	public List<Cluster> cluster () {
+	public List<Cluster> getCommittees () {
 		System.out.println("CBC - phase I ...");
 		CBC_Phase1 phase1 = new CBC_Phase1(similarityFile);
-		DataPoints datapoints = getDataPoints();
-		if (null == datapoints)
+		DataPoints data = getDataPoints();
+		if (null == data)
 			return new ArrayList<Cluster>();
 		
+		datapoints = data.getDatapoints();
 		System.out.println("CBC - phase II ...");
-		CBC_Phase2 phase2 = new CBC_Phase2(datapoints.getDatapoints(), phase1);
-		List<DataPoint> elements = datapoints.getDatapoints();
+		CBC_Phase2 phase2 = new CBC_Phase2(datapoints, phase1);
+		List<DataPoint> elements = datapoints;
 		// initial round:
 		List<Cluster> sortedClusters = phase2.clusterElements(elements);
 		List<Cluster> committees = phase2.computeCommittees(sortedClusters);
@@ -59,6 +63,10 @@ public class ClusteringByCommittee {
 		return committees;
 	}
 	
+	public List<Cluster> cluster (List<Cluster> committees) {
+		CBC_Phase3 phase3 = new CBC_Phase3(datapoints, committees);
+		return phase3.assignElements();
+	}
 	private DataPoints getDataPoints () {
 		try {
 			return new DataPoints(matrixDirectory);
@@ -70,12 +78,22 @@ public class ClusteringByCommittee {
 	
 	public static void main (String[] args) {
 		ClusteringByCommittee clustering = new ClusteringByCommittee("release/sim2csv.csv", "release/sparseMatrix_ww3_large/");
-		List<Cluster> committees = clustering.cluster();
+		List<Cluster> committees = clustering.getCommittees();
 		int counter = 0;
 		for (Cluster c : committees) {
 			counter++;
 			System.out.println("committe nr: " + counter);
 			System.out.println(c);
 		}
+		List<Cluster> finalClusters = clustering.cluster(committees);
+		List<String> clustersOut = new ArrayList<String>();
+		for (Cluster c : finalClusters) {
+			System.out.println("CLUSTER " + c);
+			clustersOut.add("CLUSTER " + c + " ==================== ");
+			for (DataPoint dp : c.dataPoints) {
+				clustersOut.add(dp.getName());
+			}
+		}
+		FileCommunicatorWriting.writeListNonAppend("clusters_cbc.txt", clustersOut);
 	}
 }

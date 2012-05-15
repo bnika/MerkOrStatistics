@@ -9,9 +9,13 @@ package is.merkor.statistics.cli;
  * 
  *******************************************************************************/
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import is.merkor.statistics.clustering.Cluster;
+import is.merkor.statistics.clustering.ClusteringByCommittee;
+import is.merkor.statistics.clustering.DataPoint;
 import is.merkor.statistics.clustering.SimilarityComputation;
 import is.merkor.statistics.cooccurrence.CooccurrenceProcessing;
 import is.merkor.statistics.relations.LMIProcessing;
@@ -19,6 +23,7 @@ import is.merkor.statistics.relations.LMI_to_DB;
 import is.merkor.statistics.relations.RelationMerger;
 import is.merkor.statistics.relations.RelationTensor;
 import is.merkor.util.FileCommunicatorReading;
+import is.merkor.util.FileCommunicatorWriting;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -152,6 +157,28 @@ public class Main {
 				} catch (Exception e) {
 					
 				}
+			}
+			else if (cmdLine.hasOption("cbc")) {
+				String matrix = cmdLine.getOptionValue("cbc");
+				String simFile = cmdLine.getOptionValue("simlists");
+				ClusteringByCommittee clustering = new ClusteringByCommittee(simFile, matrix);
+				List<Cluster> committees = clustering.getCommittees();
+				int counter = 0;
+				for (Cluster c : committees) {
+					counter++;
+					System.out.println("committe nr: " + counter);
+					System.out.println(c);
+				}
+				List<Cluster> finalClusters = clustering.cluster(committees);
+				List<String> clustersOut = new ArrayList<String>();
+				for (Cluster c : finalClusters) {
+					System.out.println("CLUSTER " + c);
+					clustersOut.add("CLUSTER " + c + " ==================== ");
+					for (DataPoint dp : c.getDataPoints()) {
+						clustersOut.add(dp.getName());
+					}
+				}
+				FileCommunicatorWriting.writeListNonAppend("clusters_cbc.txt", clustersOut);
 			}
 		}
 	}
