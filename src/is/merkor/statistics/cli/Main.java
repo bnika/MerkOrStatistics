@@ -162,7 +162,7 @@ public class Main {
 				String matrix = cmdLine.getOptionValue("cbc");
 				String simFile = cmdLine.getOptionValue("simlists");
 				ClusteringByCommittee clustering = new ClusteringByCommittee(simFile, matrix);
-				List<Cluster> committees = clustering.getCommittees();
+				List<Cluster> committees = clustering.getCommittees(FileCommunicatorReading.getWordsFromFileAsList("sparseMatrix/words.txt"));
 				int counter = 0;
 				for (Cluster c : committees) {
 					counter++;

@@ -27,8 +27,8 @@ public class CBC_TopSimilarities implements Comparable<CBC_TopSimilarities> {
 			sum += d;
 		}
 		avgSimilarity = sum/similarities.size();
+		
 	}
-	
 	public String getLemma() {
 		return lemma;
 	}

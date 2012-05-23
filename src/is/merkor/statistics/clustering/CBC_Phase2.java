@@ -53,9 +53,11 @@ public class CBC_Phase2 {
 	// increment at every new Cluster creation, use as id
 	private int clusterCounter = 0; 
 	// committee centers have to have distance below this threshold
-	private final double committeeThreshold = 0.35;
+	private final double committeeThreshold = 0.4;
 	// elements not reaching this threshold for any committe are residues
 	private final double residuesThreshold = 0.2;
+	
+	private final int MAX_CLUSTERS = 100;
 	
 	public CBC_Phase2 (List<DataPoint> elements, CBC_Phase1 phase1) {
 		this.datapoints = elements;
@@ -76,11 +78,17 @@ public class CBC_Phase2 {
 				Map<String, Double> simMap = similarityLists.get(dp.getName());
 				Cluster c = createClusterFromMap(simMap);
 				c.computeCenter();
-				c.computeAvgPairwiseSimilarity();
+				c.setName(c.getRealDataCenter().name);
+				//c.computeAvgPairwiseSimilarity();
+				CBC_TopSimilarities sim = new CBC_TopSimilarities(dp.getName(), similarityLists.get(dp.getName()));
+				c.setAvgSimilarity(sim.getAvgSimilarity());
 				highestScoringClusters.add(c);
 			}
 		}
-		Collections.sort(highestScoringClusters);
+		Collections.sort(highestScoringClusters); 
+		if (highestScoringClusters.size() > MAX_CLUSTERS) {
+			highestScoringClusters = highestScoringClusters.subList(0, MAX_CLUSTERS);
+		}
 		return highestScoringClusters;
 	}
 	

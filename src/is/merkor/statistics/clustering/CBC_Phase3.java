@@ -35,8 +35,8 @@ public class CBC_Phase3 {
 	private List<DataPoint> datapoints;
 	private List<Cluster> committees;
 	
-	private final double assignmentThreshold = 0.2;
-	private final int nrOfTopSimilar = 3;
+	private final double assignmentThreshold = 0.25;
+	private final int nrOfTopSimilar = 100;
 	
 	public CBC_Phase3 (List<DataPoint> elements, List<Cluster> committees) {
 		this.datapoints = elements;
@@ -45,14 +45,13 @@ public class CBC_Phase3 {
 	public List<Cluster> assignElements () {
 		System.out.println("Phase III assigning elements ...");
 		for (DataPoint dp : datapoints) {
-			List<Cluster> mostSimilar = getMostSimilarClusters (committees, dp);
+			TreeMap<Double, Cluster> mostSimilar = getMostSimilarClusters (committees, dp);
 			assignElementToTopSimilar(mostSimilar, dp);
 		}
 		
 		return committees;
 	}
-	public List<Cluster> getMostSimilarClusters (List<Cluster> clusters, DataPoint element) {
-		List<Cluster> mostSimilar = new ArrayList<Cluster>();
+	public TreeMap<Double, Cluster> getMostSimilarClusters (List<Cluster> clusters, DataPoint element) {
 		TreeMap<Double, Cluster> topClusters = new TreeMap<Double, Cluster>(); 
 		double minSim = 0.0;
 		
@@ -70,19 +69,19 @@ public class CBC_Phase3 {
 				}
 			}
 		}
-		return mostSimilar;
+		return topClusters;
 		
 	}
-	public void assignElementToTopSimilar (List<Cluster> mostSimilar, DataPoint element) {
+	public void assignElementToTopSimilar (TreeMap<Double, Cluster> mostSimilar, DataPoint element) {
 		//List<Cluster> clustersAssignedTo = new ArrayList<Cluster>();
-		for (Cluster c : mostSimilar) {
-			if (c.getCenter().computeCosineSimilarityTo(element) < assignmentThreshold)
+		for (Double d : mostSimilar.descendingKeySet()) {
+			if (d < assignmentThreshold)
 				break;
 			
-			int ind = committees.indexOf(c);
+			int ind = committees.indexOf(mostSimilar.get(d));
 			committees.get(ind).add(element);
 			//clustersAssignedTo.add(c);
-			element.removeCommonFeaturesWith(c.getCenter());
+			//element.removeCommonFeaturesWith(c.getCenter());
 		}
 		//return clustersAssignedTo;
 	}

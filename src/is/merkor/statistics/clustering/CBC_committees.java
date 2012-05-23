@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.TreeSet;
 
 import is.merkor.util.database.DBQueryHandler;
 
 public class CBC_committees {
 	private ArrayList<Cluster> committees; //CBC alg = 'C'
-	private HashMap<String, HashMap<String, Double>> simLists;
+	private Map<String, Map<String, Double>> simLists;
 	private ArrayList<CBC_TopSimilarities> avgSimilaritiesList;
 	private ArrayList<Cluster> initialClusterList; // clusters built form the top avgSimilaritiesList, CBC alg = 'L'
 	private ArrayList<DataPoint> datapoints;
@@ -20,7 +21,7 @@ public class CBC_committees {
 	private double threshold_2 = 0.2;
 	private int nrOfInitialClusters = 100;
 	
-	public CBC_committees(ArrayList<DataPoint> datapoints, HashMap<String, HashMap<String, Double>> simLists) {
+	public CBC_committees(ArrayList<DataPoint> datapoints, Map<String, Map<String, Double>> simLists) {
 		this.datapoints = datapoints;
 		this.simLists = simLists;
 	}

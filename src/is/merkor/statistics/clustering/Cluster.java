@@ -222,6 +222,9 @@ public class Cluster implements Comparable<Cluster> {
     	}
     	avgPairwiseSimilarity = (sumSim / count) * dataPoints.size(); // s. CBC_Phase2 for expl: |c| x avgsim(c)
     }
+    public void setAvgSimilarity (Double sim) {
+    	avgPairwiseSimilarity = sim;
+    }
     public Double getAvgSimilarity() {
     	if (null == avgPairwiseSimilarity)
     		return 0.0;

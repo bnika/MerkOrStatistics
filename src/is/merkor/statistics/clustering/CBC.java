@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeMap;
 
@@ -58,17 +59,21 @@ public class CBC {
 	private ArrayList<DataPoint> datapoints;
 	
 	private ArrayList<CBC_TopSimilarities> avgSimilaritiesList;
-	HashMap<String, HashMap<String, Double>> simLists;
+	Map<String, Map<String, Double>> simLists;
 	private CBC_committees committees;
 	private ArrayList<Cluster> committeesList;
 	double assignThreshold = 0.25;
 	
 	public CBC (ArrayList<DataPoint> datapoints) {
 		this.datapoints = datapoints;
-		ArrayList<String> lemmata = getDPLemmata();
+		//ArrayList<String> lemmata = getDPLemmata();
 		//DBQueryHandler queryHandler = new DBQueryHandler("BIN");
-		DBQueryHandler queryHandler = new DBQueryHandler("local", "merkor");
-		simLists = queryHandler.getTopSimilarities(lemmata);
+//		DBQueryHandler queryHandler = new DBQueryHandler("local", "merkor");
+//		simLists = queryHandler.getTopSimilarities(lemmata);
+		System.out.println("CBC - phase I ...");
+		CBC_Phase1 phase1 = new CBC_Phase1("release/sim2csv_top15.csv", datapoints);
+		simLists = phase1.getSimilarityLists();
+		System.out.println("datapoints size: " + datapoints.size() + " simlist size: " + simLists.size());
 		committees = new CBC_committees(datapoints, simLists);
 	}
 	private ArrayList<String> getDPLemmata() {
@@ -81,12 +86,13 @@ public class CBC {
 	public void cluster() {
 		ArrayList<DataPoint> elements = new ArrayList<DataPoint>();
 		committeesList = new ArrayList<Cluster>();
-		committeesList = committees.getCommittees(elements, committeesList);
+		committeesList = committees.getCommittees(elements, committeesList); //datapoints -> elements?
 		for (Cluster c : committeesList)
 			System.out.println(c.toString());
 		elements = committees.getResidues();
 		int counter = 0;
 		while(elements.size() > 100) {
+			System.out.println("Round: " + counter);
 			ArrayList<Cluster> tmp = committees.getCommittees(elements, committeesList);
 			for(Cluster c : tmp) {
 				boolean addCluster = true;
@@ -99,8 +105,8 @@ public class CBC {
 					committeesList.add(c);
 			}
 			elements = committees.getResidues();
-			for(Cluster c : committeesList)
-				System.out.println(c.toString());
+//			for(Cluster c : committeesList)
+//				System.out.println(c.toString());
 			System.out.println("Size of committeesList: " + committeesList.size() + "===========");
 			counter++;
 			if(counter > 20)

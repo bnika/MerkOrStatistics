@@ -3,6 +3,8 @@ package is.merkor.statistics.clustering;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import is.merkor.statistics.cooccurrence.SparseMatrix;
 import is.merkor.util.FileCommunicatorWriting;
 
@@ -24,12 +26,12 @@ public class DataPoints {
 	private String indicesFile = "indices.txt";
 	private String wordsFile = "words.txt";
 	//if datapoints should only be initialized with certain words, they are kept here
-	private ArrayList<String> wordList; 
+	private List<String> wordList; 
 	private ArrayList<DataPoint> datapoints;
 	private int dimension; //dimension of the full vector of the DataPoint objects, i.e. with zero values
 	
-	private int maxOccurrences = 3000; //f. merkor sim comp: maxOcc = 3000
-	private int minOccurrences = 10; //10; //f. merkor sim comp: minOcc = 10
+	private int maxOccurrences = 2000;//3000; //f. merkor sim comp: maxOcc = 3000
+	private int minOccurrences = 50; //10; //10; //f. merkor sim comp: minOcc = 10
 	
 	public DataPoints (String directory) throws Exception {
 		matrix = new SparseMatrix(directory + valuesFile, directory + columnsFile, directory + indicesFile, directory + wordsFile);
@@ -62,7 +64,7 @@ public class DataPoints {
 	 * Initializes a List of <code>DataPoint</code> from files representing a sparse matrix
 	 * and the corresponding list of words, using only words from wordList
 	 */
-    public DataPoints (String directory, ArrayList<String> wordList, int dimension) throws Exception {
+    public DataPoints (String directory, List<String> wordList, int dimension) throws Exception {
     	this.wordList = wordList;
     	matrix = new SparseMatrix(directory + valuesFile, directory + columnsFile, directory + indicesFile, directory + wordsFile);
 	    datapoints = new ArrayList<DataPoint>();

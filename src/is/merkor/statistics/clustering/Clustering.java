@@ -58,17 +58,17 @@ public class Clustering {
     	int nrOfClusters = 2;
     	//cluster only words from a seperated word list:
     	//ArrayList<String> wordList = FileCommunicator.getLinesFromFileAsStrings("/Users/anna/MERKOR/Data/clusteringResults_cbc/cbc_clusters_ww3centres.txt");
-    	ArrayList<String> wordList = FileCommunicatorReading.getLinesFromFileAsStrings("essliWordlist.csv");
+    	ArrayList<String> wordList = FileCommunicatorReading.getLinesFromFileAsStrings("cbcTestwrd2.txt");
     	//DataPoints data = new DataPoints("/Users/anna/MERKOR/Data/sparseMatrix_ww3_large/", wordList, 5000);
     	//cluster everything from the input sparse matrix:
     	try {
-    		DataPoints data = new DataPoints("sparseMatrix_patternW1_LW2/", 330000);
+    		DataPoints data = new DataPoints("release/sparseMatrix_ww3_large/");//, wordList, 5000);
     	//DataPoints data = new DataPoints("sparseMatrix_relatedWords/", 2000);
     	//DataPoints data = new DataPoints("/Users/anna/EclipseProjects/workspace/Data/testMatrix/", 15);
     	//ArrayList<Double[]> datapointVectors = data.getDatapointsAsVectors();
     		Clustering clustering = new Clustering();
-    		clustering.clusterKMeans(nrOfClusters, data.getDatapoints());	
-    	//clustering.clusterCBC(data.getDatapoints());
+    	//	clustering.clusterKMeans(nrOfClusters, data.getDatapoints());	
+    	clustering.clusterCBC(data.getDatapoints());
     	//clustering.clusterHierarchical(data.getDatapoints());
     	//data.printColumnNumbers();
     	} catch (Exception e) {

@@ -9,7 +9,7 @@ import java.io.StreamTokenizer;
 
 public class CooccurrenceProcessing {
 	private String freqFile = "cooccurData/contentWordList.csv"; //the most frequent contentwords
-    private String objectWordsFile = "cooccurData/nounsListMinusTop100.csv"; //the nouns for which to compute cooccurrences
+    private String objectWordsFile = "cooccurData/objectWordList.csv"; //the nouns for which to compute cooccurrences
     private CooccurrenceStatistics statistics;
     // default values:
     
